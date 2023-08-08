@@ -1,19 +1,18 @@
-<!--
- * @Author: daidai
- * @Date: 2022-02-28 16:16:42
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2022-10-25 09:18:22
- * @FilePath: \web-pc\src\pages\big-screen\view\indexs\left-center.vue
--->
 <template>
-  <Echart id="leftCenter" :options="options" class="left_center_inner" v-if="pageflag" ref="charts" />
-  <Reacquire v-else @onclick="getData" style="line-height:200px">
+  <Echart
+    id="leftCenter"
+    :options="options"
+    class="left_center_inner"
+    v-if="pageflag"
+    ref="charts"
+  />
+  <Reacquire v-else @onclick="getData" style="line-height: 200px">
     重新获取
   </Reacquire>
 </template>
 
 <script>
-import { currentGET } from 'api/modules'
+import { currentGET } from "api/modules";
 export default {
   data() {
     return {
@@ -22,67 +21,70 @@ export default {
         lockNum: 0,
         onlineNum: 0,
         offlineNum: 0,
-        totalNum: 0
+        totalNum: 0,
       },
       pageflag: true,
-      timer: null
+      timer: null,
     };
   },
   created() {
-    this.getData()
+    this.getData();
   },
-  mounted() {
-  },
+  mounted() {},
   beforeDestroy() {
-    this.clearData()
-
+    this.clearData();
   },
   methods: {
     clearData() {
       if (this.timer) {
-        clearInterval(this.timer)
-        this.timer = null
+        clearInterval(this.timer);
+        this.timer = null;
       }
     },
     getData() {
-      this.pageflag = true
+      this.pageflag = true;
       // this.pageflag =false
 
-      currentGET('big1').then(res => {
+      currentGET("big1").then((res) => {
         //只打印一次
         if (!this.timer) {
           // console.log("设备总览", res);
         }
         if (res.success) {
-          this.countUserNumData = res.data
+          this.countUserNumData = res.data;
           this.$nextTick(() => {
-            this.init()
-          })
-
+            this.init();
+          });
         } else {
-          this.pageflag = false
+          this.pageflag = false;
           this.$Message({
             text: res.msg,
-            type: 'warning'
-          })
+            type: "warning",
+          });
         }
-      })
+      });
     },
     //轮询
     switper() {
       if (this.timer) {
-        return
+        return;
       }
       let looper = (a) => {
-        this.getData()
+        this.getData();
       };
-      this.timer = setInterval(looper, this.$store.state.setting.echartsAutoTime);
-      let myChart = this.$refs.charts.chart
-      myChart.on('mouseover', params => {
-        this.clearData()
+      this.timer = setInterval(
+        looper,
+        this.$store.state.setting.echartsAutoTime
+      );
+      let myChart = this.$refs.charts.chart;
+      myChart.on("mouseover", (params) => {
+        this.clearData();
       });
-      myChart.on('mouseout', params => {
-        this.timer = setInterval(looper, this.$store.state.setting.echartsAutoTime);
+      myChart.on("mouseout", (params) => {
+        this.timer = setInterval(
+          looper,
+          this.$store.state.setting.echartsAutoTime
+        );
       });
     },
     init() {
@@ -129,8 +131,6 @@ export default {
               shadowColor: colors[1],
             },
           },
-
-
         ],
       };
       this.options = {
@@ -195,11 +195,10 @@ export default {
               length: 20, // 第一段线 长度
               length2: 36, // 第二段线 长度
               show: true,
-            
             },
-              emphasis: {
-                show: true,
-              },
+            emphasis: {
+              show: true,
+            },
           },
           {
             ...piedata,
@@ -227,5 +226,4 @@ export default {
   },
 };
 </script>
-<style lang='scss' scoped>
-</style>
+<style lang="scss" scoped></style>

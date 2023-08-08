@@ -1,10 +1,3 @@
-<!--
- * @Author: daidai
- * @Date: 2022-03-01 09:16:22
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2022-09-29 15:12:34
- * @FilePath: \web-pc\src\pages\big-screen\components\item-wrap\item-wrap.vue
--->
 <template>
   <dv-border-box-13 class="lr_titles">
     <div class="item_title" v-if="title !== ''">
@@ -37,14 +30,14 @@ export default {
   methods: {},
 };
 </script>
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 $item-title-height: 38px;
 $item_title_content-height: calc(100% - 38px);
 
 .lr_titles {
   box-sizing: border-box;
 
-:deep(.border-box-content)  {
+  :deep(.border-box-content) {
     box-sizing: border-box;
     padding: 6px 16px 0px;
   }

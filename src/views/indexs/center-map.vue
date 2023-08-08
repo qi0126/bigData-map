@@ -1,10 +1,3 @@
-<!--
- * @Author: daidai
- * @Date: 2022-03-01 11:17:39
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2022-09-29 15:50:18
- * @FilePath: \web-pc\src\pages\big-screen\view\indexs\center-map.vue
--->
 <template>
   <div class="centermap">
     <div class="maptitle">
@@ -219,7 +212,6 @@ export default {
               shadowBlur: 10,
             },
           },
-
         ],
         //动画效果
         animationDuration: 1000,
