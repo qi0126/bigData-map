@@ -6,14 +6,13 @@
       <div class="you"></div>
     </div>
     <div class="mapwrap">
-      <dv-border-box-13 v-loading="eChartsLoading">
+      <dv-border-box-13>
         <el-button
           class="quanguo"
           size="mini"
           @click="getData('china')"
           v-if="code != 'china'"
-          v-loading.fullscreen.lock="eChartsLoading"
-          >返回中国</el-button
+          >返回中国地图</el-button
         >
         <Echart id="CenterMap" :options="options" ref="CenterMap" />
       </dv-border-box-13>
@@ -34,13 +33,11 @@ export default {
       code: "china", //china 代表中国 其他地市是行政编码
       echartBindClick: false,
       isSouthChinaSea: false, //是否要展示南海群岛  修改此值请刷新页面
-      eChartsLoading: false,
     };
   },
   created() {},
 
   mounted() {
-    // console.log(xzqCode);
     this.getData("china");
   },
   methods: {
@@ -78,8 +75,10 @@ export default {
             return res;
           }
         );
+
         echarts.registerMap(name, mapjson);
       }
+
       let cityCenter = {};
       let arr = mapjson.features;
       //根据geojson获取省份中心点
@@ -96,11 +95,9 @@ export default {
           });
         }
       });
-      this.eChartsLoading = true;
       this.init(name, mydata, newData);
     },
     init(name, data, data2) {
-      // console.log(data2);
       let top = 45;
       let zoom = 1.05;
       let option = {
@@ -109,7 +106,7 @@ export default {
           show: true,
         },
         legend: {
-          show: false,
+          show: true,
         },
         visualMap: {
           left: 20,
@@ -151,7 +148,7 @@ export default {
             type: "map",
             map: name,
             data: data,
-            selectedMode: true, //是否允许选中多个区域
+            selectedMode: false, //是否允许选中多个区域
             zoom: zoom,
             geoIndex: 1,
             top: top,
@@ -230,11 +227,12 @@ export default {
       if (this.echartBindClick) return;
       //单击切换到级地图，当mapCode有值,说明可以切换到下级地图
       this.$refs.CenterMap.chart.on("click", (params) => {
+        console.log("params:", params);
         let xzqData = xzqCode[params.name];
         if (xzqData) {
           this.getData(xzqData.adcode);
         } else {
-          // this.message("暂无下级地市!");
+          this.$Message.warning("暂无下级地市!");
         }
       });
       this.echartBindClick = true;
