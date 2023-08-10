@@ -7,13 +7,12 @@
     </div>
     <div class="mapwrap">
       <dv-border-box-13>
-        <el-button
-          class="quanguo"
-          size="mini"
-          @click="getData('china')"
-          v-if="code != 'china'"
-          >返回中国地图</el-button
-        >
+        <div class="quanguo" v-if="code != 'china'">
+          <div class="cityName" :title="cityName">{{ cityName }}</div>
+          <el-button size="mini" @click="getData('china')"
+            >返回中国地图</el-button
+          >
+        </div>
         <Echart id="CenterMap" :options="options" ref="CenterMap" />
       </dv-border-box-13>
     </div>
@@ -33,6 +32,7 @@ export default {
       code: "china", //china 代表中国 其他地市是行政编码
       echartBindClick: false,
       isSouthChinaSea: false, //是否要展示南海群岛  修改此值请刷新页面
+      cityName: "",
     };
   },
   created() {},
@@ -44,7 +44,7 @@ export default {
     getData(code) {
       currentGET("big8", { regionCode: code }).then((res) => {
         if (res.success) {
-          console.log("code:", code, res.data);
+          console.log("code:", code);
           this.getGeojson(res.data.regionCode, res.data.dataList);
           this.mapclick();
         } else {
@@ -72,6 +72,15 @@ export default {
       } else {
         mapjson = await GETNOBASE(`./map-geojson/${geoname}.json`).then(
           (res) => {
+            let newList = [];
+            mydata.forEach((ielem) => {
+              let isAdd = res.features.find(
+                (jelem) => jelem.properties.name === ielem.name
+              );
+              if (!!isAdd) {
+                newList.push(ielem);
+              }
+            });
             return res;
           }
         );
@@ -227,7 +236,7 @@ export default {
       if (this.echartBindClick) return;
       //单击切换到级地图，当mapCode有值,说明可以切换到下级地图
       this.$refs.CenterMap.chart.on("click", (params) => {
-        console.log("params:", params);
+        this.cityName = params.name;
         let xzqData = xzqCode[params.name];
         if (xzqData) {
           this.getData(xzqData.adcode);
@@ -292,9 +301,19 @@ export default {
 
     .quanguo {
       position: absolute;
-      right: 20px;
+      right: 10px;
       top: -46px;
       cursor: pointer;
+      display: flex;
+      width: 700px;
+      justify-content: space-between;
+      .cityName {
+        margin-right: 10px;
+        width: 220px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
     }
   }
 }
